@@ -3,64 +3,194 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>A Special Note For You ❤️</title>
+  <title>[TITLE]</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
     }
 
     body {
       background: linear-gradient(135deg, #ffe6ea 0%, #ffc3d0 100%);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 20px;
       overflow-x: hidden;
+      touch-action: manipulation;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 24px;
-      padding: 32px 24px;
-      width: 100%;
-      max-width: 380px;
+      padding: 28px 20px;
       text-align: center;
       box-shadow: 0 15px 35px rgba(230, 80, 115, 0.2);
       position: relative;
-      z-index: 10;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .emoji-header {
       font-size: 50px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       animation: pulse 1.5s infinite ease-in-out;
     }
 
     h1 {
       color: #e63956;
-      font-size: 24px;
-      margin-bottom: 12px;
+      font-size: 22px;
+      margin-bottom: 8px;
       font-weight: 700;
     }
 
     p {
       color: #555;
-      font-size: 16px;
-      line-height: 1.5;
-      margin-bottom: 24px;
+      font-size: 15px;
+      line-height: 1.4;
+      margin-bottom: 16px;
     }
 
+    /* Flashcard */
+    .flashcard {
+      background: #fff0f3;
+      border: 2px dashed #ff8fa3;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .flashcard:active {
+      transform: scale(0.98);
+    }
+
+    .card-text {
+      color: #c72c48;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .card-subtext {
+      font-size: 11px;
+      color: #d81b60;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    /* Slider Box */
+    .slider-box {
+      margin: 16px 0 20px;
+      background: #fff8f9;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid #ffe1e6;
+    }
+
+    .slider-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #d81b60;
+      margin-bottom: 8px;
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: #ff4769;
+    }
+
+    /* Relationship Timer Box */
+    .timer-box {
+      background: #fff0f3;
+      border: 2px solid #ff8fa3;
+      border-radius: 16px;
+      padding: 14px 10px;
+      margin: 15px 0 20px 0;
+      box-shadow: 0 4px 12px rgba(230, 80, 115, 0.1);
+    }
+
+    .timer-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #d81b60;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .timer-digits {
+      font-size: 18px;
+      font-weight: 700;
+      color: #e63956;
+      margin-top: 6px;
+    }
+
+    /* Inputs */
+    input[type="date"], textarea {
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 2px solid #ff8fa3;
+      font-size: 15px;
+      color: #e63956;
+      font-weight: 600;
+      outline: none;
+      width: 100%;
+      max-width: 320px;
+      margin: 8px 0 14px 0;
+      text-align: center;
+      background: #fff;
+    }
+
+    textarea {
+      height: 90px;
+      resize: none;
+      text-align: left;
+      font-weight: 400;
+      color: #444;
+      font-family: inherit;
+    }
+
+    textarea::placeholder {
+      color: #bbb;
+      font-style: italic;
+    }
+
+    .error-msg {
+      color: #d81b60;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    /* Buttons */
     .btn-group {
       display: flex;
       justify-content: center;
       gap: 16px;
       position: relative;
       min-height: 50px;
+      margin-top: 10px;
     }
 
     button {
@@ -70,18 +200,14 @@
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .btn-yes {
+    .btn-yes, .btn-action {
       background: #ff4769;
       color: white;
       box-shadow: 0 8px 20px rgba(255, 71, 105, 0.4);
-    }
-
-    .btn-yes:active {
-      transform: scale(0.95);
     }
 
     .btn-no {
@@ -90,21 +216,82 @@
       position: absolute;
     }
 
-    /* Secret Heart Explosion Canvas */
-    .heart {
-      position: fixed;
-      font-size: 20px;
-      animation: floatUp 2.5s ease-out forwards;
-      pointer-events: none;
-      z-index: 100;
+    /* Animated GIF */
+    .dance-sticker {
+      width: 150px;
+      height: 150px;
+      margin: 12px auto;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
 
-    /* Success screen modal */
-    .success-screen {
-      display: none;
+    /* Envelope styling */
+    .envelope {
+      background: #ffebf0;
+      border: 2px solid #ff4769;
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      animation: bounce 1.5s infinite ease-in-out;
+    }
+
+    .letter-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px dashed #ff8fa3;
+      text-align: left;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+
+    /* QR Code Box */
+    .qr-container {
+      background: #fff;
+      border: 2px solid #ff8fa3;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: flex;
       flex-direction: column;
       align-items: center;
-      animation: fadeIn 0.5s ease-in-out forwards;
+      box-shadow: 0 8px 20px rgba(255, 71, 105, 0.15);
+    }
+
+    .qr-container img {
+      width: 180px;
+      height: 180px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+
+    /* Photo Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .gallery-grid img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border: 3px solid #fff;
+    }
+
+    /* Sparkles */
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 18px;
+      animation: floatFade 1s linear forwards;
+      z-index: 1000;
     }
 
     @keyframes pulse {
@@ -112,55 +299,249 @@
       50% { transform: scale(1.1); }
     }
 
-    @keyframes floatUp {
-      0% {
-        opacity: 1;
-        transform: translateY(0) scale(1) rotate(0deg);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-120vh) scale(1.8) rotate(360deg);
-      }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
+    @keyframes floatFade {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-40px) scale(1.5); }
     }
   </style>
 </head>
 <body>
 
-  <div class="card" id="main-card">
-    <div class="emoji-header">🥺👉👈</div>
-    <h1>Hey Beautiful!</h1>
-    <p>I was just thinking about you and realized... my day is always 100x better when you're around. <br><br><strong>Will you let me treat you to a date soon?</strong></p>
-    
-    <div class="btn-group">
-      <button class="btn-yes" id="yesBtn">YES! 💕</button>
-      <button class="btn-no" id="noBtn" style="right: 10px;">No 😜</button>
-    </div>
-  </div>
+  <div class="container">
 
-  <div class="card success-screen" id="successCard">
-    <div class="emoji-header">💖✨🎉</div>
-    <h1>YAAAY! Kilig Level 1000!</h1>
-    <p>Get ready for good food, zero stress, and endless lingering smiles. Can't wait to see you!</p>
-    <p style="font-size: 14px; color: #ff4769; font-weight: 600;">Check your messages — I'm already sending you the details 😉</p>
+    <!-- SCREEN 1: Proposal -->
+    <div class="card" id="cardStep1">
+      <div class="emoji-header">[EMOJI_HEADER]</div>
+      <h1>[HEADER_TITLE_STEP1]</h1>
+      <p>[SUBHEADER_TEXT_STEP1]</p>
+
+      <div class="flashcard" id="reasonCard">
+        <div class="card-text" id="reasonText">[INITIAL_FLASHCARD_TEXT]</div>
+        <div class="card-subtext" id="reasonSubtext">[INITIAL_FLASHCARD_SUBTEXT]</div>
+      </div>
+
+      <!-- Locked Content Section (Only reveals AFTER all reasons are read) -->
+      <div id="unlockedSection" class="hidden">
+        <div class="slider-box">
+          <div class="slider-label" id="sliderLabel1">[SLIDER1_INITIAL_LABEL]</div>
+          <input type="range" id="kiligSlider1" min="0" max="100" value="50">
+        </div>
+
+        <p style="font-weight: 600; color: #d81b60;">[QUESTION_TEXT]</p>
+
+        <div class="btn-group">
+          <button class="btn-yes" id="yesBtn">[YES_BUTTON_TEXT]</button>
+          <button class="btn-no" id="noBtn" style="right: 10px;">[NO_BUTTON_TEXT]</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Count-Up Timer, Slider Confirmation, Date & Message -->
+    <div class="card hidden" id="cardStep2">
+      <div class="emoji-header">[EMOJI_HEADER_STEP2]</div>
+      <h1>[HEADER_TITLE_STEP2]</h1>
+
+      <!-- Live Count-Up Relationship Timer -->
+      <div class="timer-box">
+        <div class="timer-title">[TIMER_TITLE_LABEL]</div>
+        <div id="togetherTimer" class="timer-digits">[TIMER_CALCULATING_TEXT]</div>
+        <span style="font-size: 11px; color: #999;">([START_DATE_LABEL])</span>
+      </div>
+
+      <!-- Second Slider Confirmation -->
+      <div class="slider-box">
+        <p style="font-size: 13px; font-weight: 600; color: #e63956; margin-bottom: 6px;">[SLIDER2_INSTRUCTION_TEXT]</p>
+        <div class="slider-label" id="sliderLabel2">[SLIDER2_INITIAL_LABEL]</div>
+        <input type="range" id="kiligSlider2" min="0" max="100" value="100">
+      </div>
+      
+      <p style="font-size: 16px; font-weight: 700; color: #c72c48; margin-top: 10px;">
+        1. [FIELD_1_LABEL]
+      </p>
+      <input type="date" id="flightDate" />
+
+      <p style="font-size: 16px; font-weight: 700; color: #c72c48; margin-top: 8px;">
+        2. [FIELD_2_LABEL]
+      </p>
+      <textarea id="gfMessage" placeholder="[TEXTAREA_PLACEHOLDER]"></textarea>
+
+      <div id="errorMsg" class="error-msg hidden">[ERROR_MESSAGE_TEXT]</div>
+
+      <button class="btn-action" id="generateQrBtn">[GENERATE_BUTTON_TEXT]</button>
+
+      <!-- Animated GIF Section -->
+      <div id="danceSection" class="hidden">
+        <img src="[GIF_URL]" alt="Happy Dance" class="dance-sticker" />
+        <p style="color: #ff4769; font-weight: bold; font-size: 15px;">[GIF_CAPTION_TEXT]</p>
+      </div>
+
+      <!-- Sealed Envelope -->
+      <div id="envelopeSection" class="hidden">
+        <div class="envelope" id="envelopeBtn">
+          <div style="font-size: 36px;">[ENVELOPE_EMOJI]</div>
+          <div style="font-weight: 700; color: #e63956; margin-top: 6px;">[ENVELOPE_TITLE_TEXT]</div>
+          <span style="font-size: 12px; color: #777;">[ENVELOPE_SUBTEXT]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: QR Code, Letter & Photo Gallery -->
+    <div class="card hidden" id="cardStep3">
+      <div class="emoji-header">[EMOJI_HEADER_STEP3]</div>
+      <h1>[HEADER_TITLE_STEP3]</h1>
+
+      <!-- Date & Message QR Code Section -->
+      <div class="qr-container">
+        <h3 style="color: #e63956; font-size: 16px;">[QR_HEADER_TEXT]</h3>
+        <p style="font-size: 12px; color: #666; margin-bottom: 0;">[QR_INSTRUCTION_TEXT]</p>
+        <img id="qrCodeImage" src="" alt="QR Code">
+        <p style="font-size: 11px; color: #aaa;">[QR_FOOTER_TEXT]</p>
+      </div>
+      
+      <div class="letter-content">
+        <p>[LETTER_PARAGRAPH_1]</p><br>
+        <p>[LETTER_PARAGRAPH_2]</p><br>
+        <p>[LETTER_PARAGRAPH_3]</p><br>
+        <p>[LETTER_PARAGRAPH_4]</p>
+      </div>
+
+      <h2 style="color: #e63956; font-size: 18px; margin-top: 24px;">[GALLERY_TITLE]</h2>
+      <p style="font-size: 12px; color: #888;">[GALLERY_SUBTITLE]</p>
+
+      <!-- Gallery Grid -->
+      <div class="gallery-grid">
+        <img src="[IMAGE_URL_1]" alt="Memory 1">
+        <img src="[IMAGE_URL_2]" alt="Memory 2">
+        <img src="[IMAGE_URL_3]" alt="Memory 3">
+        <img src="[IMAGE_URL_4]" alt="Memory 4">
+      </div>
+    </div>
+
   </div>
 
   <script>
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const mainCard = document.getElementById('main-card');
-    const successCard = document.getElementById('successCard');
+    // --- Count-Up Timer ---
+    const startDate = new Date('[START_DATE_STRING]').getTime();
 
-    // Make the NO button evade touch/mouse
+    function updateCountUpTimer() {
+      const now = new Date().getTime();
+      const diff = now - startDate;
+
+      if (diff >= 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('togetherTimer').innerText = 
+          `${days} days, ${hours}h ${minutes}m ${seconds}s [TIMER_EMOJI]`;
+      } else {
+        document.getElementById('togetherTimer').innerText = `[TIMER_NOT_STARTED_TEXT]`;
+      }
+    }
+
+    // --- Reasons Array ---
+    const reasons = [
+      "[REASON_1]",
+      "[REASON_2]",
+      "[REASON_3]",
+      "[REASON_4]",
+      "[REASON_5]",
+      "[REASON_6]",
+      "[REASON_7]",
+      "[REASON_8]",
+      "[REASON_9]",
+      "[REASON_10]",
+      "[REASON_11]",
+      "[REASON_12]",
+      "[REASON_13]",
+      "[REASON_14]",
+      "[REASON_15]"
+    ];
+
+    let reasonIndex = 0;
+    let readCount = 0;
+    const totalReasons = reasons.length;
+
+    const reasonCard = document.getElementById('reasonCard');
+    const reasonText = document.getElementById('reasonText');
+    const reasonSubtext = document.getElementById('reasonSubtext');
+    const unlockedSection = document.getElementById('unlockedSection');
+
+    // --- Read Tracker & Unlock Logic ---
+    reasonCard.addEventListener('click', () => {
+      reasonText.innerText = reasons[reasonIndex];
+      
+      if (readCount < totalReasons) {
+        readCount++;
+      }
+
+      if (readCount < totalReasons) {
+        reasonSubtext.innerText = `(Reason ${readCount} of ${totalReasons} read - Tap to continue [EMOJI])`;
+      } else {
+        reasonSubtext.innerText = `[UNLOCK_SUCCESS_TEXT]`;
+        if (unlockedSection.classList.contains('hidden')) {
+          unlockedSection.classList.remove('hidden');
+          createHeartExplosion();
+          unlockedSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+
+      reasonIndex = (reasonIndex + 1) % totalReasons;
+    });
+
+    // --- Slider 1 Logic ---
+    const slider1 = document.getElementById('kiligSlider1');
+    const sliderLabel1 = document.getElementById('sliderLabel1');
+
+    slider1.addEventListener('input', (e) => {
+      const val = e.target.value;
+      if (val < 25) {
+        sliderLabel1.innerText = `[SLIDER1_TIER_1_LABEL]: ${val}%`;
+      } else if (val < 75) {
+        sliderLabel1.innerText = `[SLIDER1_TIER_2_LABEL]: ${val}%`;
+      } else if (val < 100) {
+        sliderLabel1.innerText = `[SLIDER1_TIER_3_LABEL]: ${val}%`;
+      } else {
+        sliderLabel1.innerText = `[SLIDER1_MAX_LABEL]`;
+      }
+    });
+
+    // --- Slider 2 Logic ---
+    const slider2 = document.getElementById('kiligSlider2');
+    const sliderLabel2 = document.getElementById('sliderLabel2');
+    let finalConfirmedKilig = "[DEFAULT_FINAL_SCORE]";
+
+    slider2.addEventListener('input', (e) => {
+      const val = e.target.value;
+      if (val < 25) {
+        sliderLabel2.innerText = `[SLIDER2_TIER_1_LABEL]: ${val}%`;
+        finalConfirmedKilig = `${val}%`;
+      } else if (val < 75) {
+        sliderLabel2.innerText = `[SLIDER2_TIER_2_LABEL]: ${val}%`;
+        finalConfirmedKilig = `${val}%`;
+      } else if (val < 100) {
+        sliderLabel2.innerText = `[SLIDER2_TIER_3_LABEL]: ${val}%`;
+        finalConfirmedKilig = `${val}%`;
+      } else {
+        sliderLabel2.innerText = `[SLIDER2_MAX_LABEL]`;
+        finalConfirmedKilig = "[SLIDER2_MAX_VALUE]";
+      }
+    });
+
+    // --- Evading No Button ---
+    const noBtn = document.getElementById('noBtn');
+    const cardStep1 = document.getElementById('cardStep1');
+
     function moveNoBtn() {
-      const cardRect = mainCard.getBoundingClientRect();
+      const cardRect = cardStep1.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
 
-      // Calculate random available positions within the card area
       const maxX = cardRect.width - btnRect.width - 20;
       const maxY = cardRect.height - btnRect.height - 20;
 
@@ -170,35 +551,105 @@
       noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
     }
 
-    // Trigger evade on hover or touch start
     noBtn.addEventListener('mouseenter', moveNoBtn);
     noBtn.addEventListener('touchstart', (e) => {
       e.preventDefault();
       moveNoBtn();
     });
 
-    // YES Button Click
+    // --- Press YES -> Step 2 ---
+    const yesBtn = document.getElementById('yesBtn');
+    const cardStep2 = document.getElementById('cardStep2');
+
     yesBtn.addEventListener('click', () => {
-      mainCard.style.display = 'none';
-      successCard.style.display = 'flex';
+      cardStep1.classList.add('hidden');
+      cardStep2.classList.remove('hidden');
+      
+      // Start real-time count-up timer
+      updateCountUpTimer();
+      setInterval(updateCountUpTimer, 1000);
+
       createHeartExplosion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Floating hearts animation function
+    // --- Generate QR Code with Date & Mandatory Message ---
+    const flightDateInput = document.getElementById('flightDate');
+    const gfMessageInput = document.getElementById('gfMessage');
+    const generateQrBtn = document.getElementById('generateQrBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const danceSection = document.getElementById('danceSection');
+    const envelopeSection = document.getElementById('envelopeSection');
+    const qrCodeImage = document.getElementById('qrCodeImage');
+
+    generateQrBtn.addEventListener('click', () => {
+      const selectedDate = flightDateInput.value;
+      const userMessage = gfMessageInput.value.trim();
+
+      if (!selectedDate || !userMessage) {
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+
+      errorMsg.classList.add('hidden');
+
+      // Encode flight date, kilig level, and message into QR code
+      const textToEncode = `Date: ${selectedDate}\nScore: ${finalConfirmedKilig}\nMessage:\n"${userMessage}"`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(textToEncode)}`;
+      qrCodeImage.src = qrUrl;
+
+      danceSection.classList.remove('hidden');
+      createHeartExplosion();
+
+      setTimeout(() => {
+        envelopeSection.classList.remove('hidden');
+        envelopeSection.scrollIntoView({ behavior: 'smooth' });
+      }, 1500);
+    });
+
+    // --- Tap Letter -> Step 3 ---
+    const envelopeBtn = document.getElementById('envelopeBtn');
+    const cardStep3 = document.getElementById('cardStep3');
+
+    envelopeBtn.addEventListener('click', () => {
+      cardStep2.classList.add('hidden');
+      cardStep3.classList.remove('hidden');
+      createHeartExplosion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // --- Sparkle Effect ---
+    document.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      createSparkle(touch.clientX, touch.clientY);
+    });
+
+    function createSparkle(x, y) {
+      const el = document.createElement('div');
+      el.className = 'sparkle';
+      const icons = ['✨', '💖', '🌸', '💕'];
+      el.innerText = icons[Math.floor(Math.random() * icons.length)];
+      el.style.left = `${x - 10}px`;
+      el.style.top = `${y - 10}px`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1000);
+    }
+
     function createHeartExplosion() {
       const hearts = ['💖', '💕', '🌸', '✨', '😍', '💘'];
-      for (let i = 0; i < 40; i++) {
+      for (let i = 0; i < 35; i++) {
         setTimeout(() => {
           const heart = document.createElement('div');
-          heart.classList.add('heart');
+          heart.className = 'sparkle';
           heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
           heart.style.left = Math.random() * 100 + 'vw';
           heart.style.top = '100vh';
-          heart.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+          heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+          heart.style.animation = `floatFade ${Math.random() * 2 + 1.5}s ease-out forwards`;
           document.body.appendChild(heart);
 
-          setTimeout(() => heart.remove(), 2500);
-        }, i * 60);
+          setTimeout(() => heart.remove(), 3000);
+        }, i * 50);
       }
     }
   </script>
